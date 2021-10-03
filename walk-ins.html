@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Patient List</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--Libraries-->
+    <link rel="stylesheet" href="scripts/libraries/css/bootstrap.min.css" />
+
+    <script src="scripts/libraries/js/jquery-3.6.0.min.js"></script>
+    <script src="scripts/libraries/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/libraries/js/jquery.csv.min.js"></script>
+    <script src="scripts/libraries/js/jquery.qrcode.min.js"></script>
+
+    <!--Custom scripts-->
+    <link rel="stylesheet" href="scripts/style.css" />
+
+    <style>
+        #patient-list{
+            font-size:1.3em;
+        }
+    </style>
+  </head>
+
+  <body>
+    <div id="input-modal" class="container mt-5">
+      <h1>COVID Vaccine Walk-in QR Generator</h1>
+      <p>
+        <label for="family-name">Family Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="family-name"
+          placeholder="Family Name"
+        />
+      </p>
+      <p>
+        <label for="first-name">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="first-name"
+          placeholder="First Name"
+        />
+      </p>
+      <hr>
+      <p>
+         Either complete the NHS number, or the other details if the patient has no NHS number.
+      </p>
+      <div class="row">
+          <div class="col">
+            <p>
+                <label for="nhs-number">NHS Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nhs-number"
+                  placeholder="NHS Number"
+                />
+              </p>
+          </div>
+          <div class="col">
+            <p>
+                <label for="dob">Date of Birth</label>
+                <div class="row">
+                    <div class="col">
+                        <input type="number" class="form-control" id="dob-day" placeholder="dd" />
+                    </div>
+                    <div class="col">
+                        <input
+                  type="number"
+                  class="form-control"
+                  id="dob-month"
+                  placeholder="mm"
+                />
+                    </div>
+                    <div class="col">
+                        <input
+                  type="number"
+                  class="form-control"
+                  id="dob-year"
+                  placeholder="yyyy"
+                />
+                    </div>
+                </div>
+              </p>
+              <p>
+                <label for="gender">Gender</label>
+                <select class="form-control" id="gender">
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
+              </p>
+              <p>
+                <label for="address1">Address Line 1</label>
+                <input type="text" class="form-control" id="address1" placeholder="Address Line 1" />
+              </p>
+              <p>
+                <label for="postcode">Post Code</label>
+                <input type="text" class="form-control" id="postcode" placeholder="Post Code" />
+              </p>
+          </div>
+      </div>
+
+      
+      <p><button type="button" class="btn btn-primary btn-block" id="generate">Generate Form</button></p>
+    </div>
+    <div class="container-fluid" id="patient-list"></div>
+    <script>
+        
+            $("#generate").click(function(){
+                html = `<table>
+                <tr>
+                    <td>
+                        NHS: <strong>` + $("#nhs-number").val() + `</strong><br>
+                        Family Name: <strong>` + $("#family-name").val() + `</strong><br>
+                        First Name: <strong>` + $("#first-name").val() + `</strong><br>
+                        Date of Birth: <strong>` + $("#dob-day").val() + `/`+ $("#dob-month").val() + `/`+ $("#dob-year").val() + `</strong><br>
+                        Gender: <strong>` + $("#gender").val() + `</strong><br>
+                        Address: <strong>` + $("#address1").val() + `</strong><br>
+                        Post Code: <strong>` + $("#postcode").val() + `</strong><br>
+                    </td>
+                    <td class="text-center">
+                        <div class="qr-code" id="qr"></div>
+                    <td>
+                </tr>
+            </table>`;
+                $("#input-modal").hide(); 
+                $("#patient-list").html(html)
+                genQRCodes(); 
+            }) 
+
+            function genQRCodes() {
+                if($("#nhs-number").val()){
+                    //Generate NHS Number only QR
+                    qrtext = $("#nhs-number").val().replace(/\s/g, '');   
+                }else{
+                    qrtext = $("#family-name").val() 
+                    + String.fromCharCode(09) 
+                    + $("#first-name").val() 
+                    + String.fromCharCode(09) 
+                    + $("#dob-day").val() + $("#dob-month").val() + $("#dob-year").val() 
+                    + String.fromCharCode(09) 
+                    + $("#gender").val().charAt(0)
+                    + String.fromCharCode(09)
+                    + $("#address1").val()
+                    + String.fromCharCode(09)
+                    + $("#postcode").val()
+                    + String.fromCharCode(32);   
+                }
+                console.log(qrtext)
+                $('#qr').qrcode({
+                        text: qrtext
+                    });
+                }
+        </script>
+  </body>
+</html>
