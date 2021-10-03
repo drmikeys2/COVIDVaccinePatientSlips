@@ -25,15 +25,7 @@
   <body>
     <div id="input-modal" class="container mt-5">
       <h1>COVID Vaccine Walk-in QR Generator</h1>
-      <p>
-        <label for="family-name">Family Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="family-name"
-          placeholder="Family Name"
-        />
-      </p>
+      
       <p>
         <label for="first-name">First Name</label>
         <input
@@ -41,6 +33,15 @@
           class="form-control"
           id="first-name"
           placeholder="First Name"
+        />
+      </p>
+      <p>
+        <label for="family-name">Surname</label>
+        <input
+          type="text"
+          class="form-control"
+          id="family-name"
+          placeholder="Family Name"
         />
       </p>
       <hr>
@@ -113,9 +114,9 @@
                 <tr>
                     <td>
                         NHS: <strong>` + $("#nhs-number").val() + `</strong><br>
-                        Family Name: <strong>` + $("#family-name").val() + `</strong><br>
+                        Surname: <strong>` + $("#family-name").val() + `</strong><br>
                         First Name: <strong>` + $("#first-name").val() + `</strong><br>
-                        Date of Birth: <strong>` + $("#dob-day").val() + `/`+ $("#dob-month").val() + `/`+ $("#dob-year").val() + `</strong><br>
+                        Date of Birth: <strong>` + $("#dob-day").val() + ` `+ $("#dob-month").val() + ` `+ $("#dob-year").val() + `</strong><br>
                         Gender: <strong>` + $("#gender").val() + `</strong><br>
                         Address: <strong>` + $("#address1").val() + `</strong><br>
                         Post Code: <strong>` + $("#postcode").val() + `</strong><br>
@@ -133,7 +134,7 @@
             function genQRCodes() {
                 if($("#nhs-number").val()){
                     //Generate NHS Number only QR
-                    qrtext = $("#nhs-number").val().replace(/\s/g, '');   
+                    qrtext = $("#nhs-number").val().replace(/\s/g, '').replace(/-/g, '');   
                 }else{
                     qrtext = $("#family-name").val() 
                     + String.fromCharCode(09) 
